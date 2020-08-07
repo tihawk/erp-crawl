@@ -1,4 +1,6 @@
-const nodemailer = require('nodemailer')
+const Mailgun = require('mailgun-js')
+
+const mailgun = new Mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.DOMAIN, host: process.env.MAILGUN_HOST})
 
 async function sendEmail (toArr, listOfMessages, townOfInterest) {
     console.log(listOfMessages)
@@ -7,33 +9,19 @@ async function sendEmail (toArr, listOfMessages, townOfInterest) {
         return `<strong>${message.dateConcerning}</strong><br/><br/>${message.message}`
     }).join('\n')
 
-    const transporter = nodemailer.createTransport({
-        host: 'smtp.abv.bg',
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD
-        },
-        tls: {
-            // do not fail on invalid certs
-            rejectUnauthorized: false
-        }
-    })
-
     for (const to of toArr) {
         const mailOptions = {
-            from: process.env.EMAIL,
+            from: process.env.FROM,
             to,
             subject: `Планирано спиране на тока за ${townOfInterest}`,
             html
         }
-    
-        transporter.sendMail(mailOptions, (err, info) => {
+
+        mailgun.messages().send(mailOptions, (err, body) => {
             if (err) {
                 console.log(err)
             } else {
-                console.log('Email sent:', info.response)
+                console.log('Email sent:', body)
             }
         })
     }
