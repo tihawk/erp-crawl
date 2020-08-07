@@ -1,32 +1,5 @@
 const puppeteer = require('puppeteer')
-const { elementReady, pageLogger, timeout } = require('../utils')
-
-// async function parseFeed () {
-//     try {
-//         await Promise.all([
-//             elementReady('div.map-interruptions', 5000, 1000),
-//             elementReady('div.interruption-data', 5000, 1000)
-//         ])
-
-//         if (document.querySelector('div.interruption-data') === null) {
-//             console.log('Reloading:', location.href.toString())
-//             return 'RELOAD'
-//         }
-
-//     } catch (e) {
-//         console.log('PARSING Error')
-//         console.log(e.toString())
-//         return
-//     }
-// }
-
-// async function getFeedItemData (page, documentIdElement, dateConcerning) {
-//     try {
-
-//     } catch (e) {
-//         console.log('Error while parsing', e, documentIdElement)
-//     }
-// }
+const { pageLogger, timeout } = require('../utils')
 
 function getDateFromEuString (string) {
     const strArr = string.split('.')
