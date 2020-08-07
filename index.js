@@ -6,7 +6,7 @@ const sendEmail = require('./mailer/index')
 const townOfInterest = 'Страшимирово'
 
 run(undefined, undefined, townOfInterest).then(async messages => {
-    await sendEmail(process.env.ONLY_ME.split(';'), messages, townOfInterest)
+    await sendEmail(process.env.RECEPIENT_LIST.split(';'), messages, townOfInterest)
     new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(process.exit())
