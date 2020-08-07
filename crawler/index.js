@@ -42,7 +42,7 @@ async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1
     let result
     try {
         // open browser and get the page
-        let pages = await browser.pages()
+        const pages = await browser.pages()
         let p
         if (pages.length > 0) p = pages[0]
         else p = await browser.newPage()
@@ -67,9 +67,9 @@ async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1
 
         console.log('[run] Start Crawling Feed')
 
-        let documentIdElements = await page.evaluate(_townOfInterest => {
+        const documentIdElements = await page.evaluate(_townOfInterest => {
             const result = []
-            let feedElements = Array.from(document.querySelector('ul#interruption_areas').childNodes)
+            const feedElements = Array.from(document.querySelector('ul#interruption_areas').childNodes)
 
             for (const liNode of feedElements) {
                 if (liNode.tagName === 'LI') {
@@ -79,8 +79,8 @@ async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1
                 }
 
                 // console.log('[run] getting date and message')
-                let dateConcerning = liNode.getElementsByClassName('period')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
-                let message = liNode.getElementsByClassName('text')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
+                const dateConcerning = liNode.getElementsByClassName('period')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
+                const message = liNode.getElementsByClassName('text')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
 
                 if(message.includes(_townOfInterest)) {
                     console.log(`[run] town of ${_townOfInterest} is mentioned in message`)
@@ -96,7 +96,7 @@ async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1
         }, townOfInterest)
 
         result = filterMessagesByDate(documentIdElements)
-        // filterMessagesByDate(result)
+
     } catch (e) {
         await browser.close()
         throw e

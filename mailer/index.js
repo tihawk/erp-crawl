@@ -1,17 +1,16 @@
 const Mailgun = require('mailgun-js')
-
 const mailgun = new Mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.DOMAIN, host: process.env.MAILGUN_HOST})
 
 async function sendEmail (toArr, listOfMessages, townOfInterest) {
     console.log(listOfMessages)
-    if (listOfMessages.length < 1) {
+    if (!listOfMessages.length) {
         console.log('[sendEmail] no messages for upcoming days, not sending emails')
         return
     }
 
     const html = listOfMessages.map(message => {
-        return `<strong>${message.dateConcerning}</strong><br/><br/>${message.message}`
-    }).join('\n')
+        return `<strong>${message.dateConcerning}</strong><br/>${message.message}`
+    }).join('<br/><br/>')
 
     for (const to of toArr) {
         const mailOptions = {

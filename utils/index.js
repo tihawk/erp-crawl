@@ -1,5 +1,3 @@
-// const FeedItemModel = require('./FeedItemModel')
-
 /**
  * Promised Timeout variant
  * @param ms Time in Milliseconds to wait
@@ -58,7 +56,6 @@ function pageLogger (msg) {
 }
 
 module.exports = {
-//   FeedItemModel,
   timeout,
   elementReady,
   idle,
