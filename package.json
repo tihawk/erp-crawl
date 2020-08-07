@@ -1,0 +1,22 @@
+{
+  "name": "erp-crawl",
+  "version": "1.0.0",
+  "description": "a crawler for planned electricity cut-offs in bulgaria north",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tihawk/erp-crawl.git"
+  },
+  "author": "Kiril P. Blagoev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tihawk/erp-crawl/issues"
+  },
+  "homepage": "https://github.com/tihawk/erp-crawl#readme",
+  "dependencies": {
+    "puppeteer": "^5.2.1"
+  }
+}
