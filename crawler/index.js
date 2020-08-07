@@ -30,7 +30,7 @@ const { elementReady, pageLogger, timeout } = require('../utils')
 
 async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
     const browser = await puppeteer.launch({
-        headless: false,
+        // headless: false,
         args: ['--no-sandbox'],
         defaultViewport: {
             width: 1366,

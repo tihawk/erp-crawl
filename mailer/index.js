@@ -8,7 +8,9 @@ async function sendEmail (toArr, listOfMessages, townOfInterest) {
     }).join('\n')
 
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.abv.bg',
+        port: 465,
+        secure: true,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.EMAIL_PASSWORD
