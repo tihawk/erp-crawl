@@ -1,32 +1,32 @@
 const puppeteer = require('puppeteer')
 const { elementReady, pageLogger, timeout } = require('../utils')
 
-async function parseFeed () {
-    try {
-        await Promise.all([
-            elementReady('div.map-interruptions', 5000, 1000),
-            elementReady('div.interruption-data', 5000, 1000)
-        ])
+// async function parseFeed () {
+//     try {
+//         await Promise.all([
+//             elementReady('div.map-interruptions', 5000, 1000),
+//             elementReady('div.interruption-data', 5000, 1000)
+//         ])
 
-        if (document.querySelector('div.interruption-data') === null) {
-            console.log('Reloading:', location.href.toString())
-            return 'RELOAD'
-        }
+//         if (document.querySelector('div.interruption-data') === null) {
+//             console.log('Reloading:', location.href.toString())
+//             return 'RELOAD'
+//         }
 
-    } catch (e) {
-        console.log('PARSING Error')
-        console.log(e.toString())
-        return
-    }
-}
+//     } catch (e) {
+//         console.log('PARSING Error')
+//         console.log(e.toString())
+//         return
+//     }
+// }
 
-async function getFeedItemData (page, documentIdElement, dateConcerning) {
-    try {
+// async function getFeedItemData (page, documentIdElement, dateConcerning) {
+//     try {
 
-    } catch (e) {
-        console.log('Error while parsing', e, documentIdElement)
-    }
-}
+//     } catch (e) {
+//         console.log('Error while parsing', e, documentIdElement)
+//     }
+// }
 
 async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
     const browser = await puppeteer.launch({
