@@ -28,13 +28,13 @@ async function getFeedItemData (page, documentIdElement, dateConcerning) {
     }
 }
 
-async function run (url, cityNumber = '1', townOfInterest = 'Страшимирово') {
+async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
     const browser = await puppeteer.launch({
         defaultViewport: {
             width: 1366,
             height: 768
         },
-        devtools: true // true for nonheadless Browser with devtools opened
+        devtools: false // true for nonheadless Browser with devtools opened
     })
 
     let result
@@ -93,11 +93,13 @@ async function run (url, cityNumber = '1', townOfInterest = 'Страшимир�
             return result
         }, townOfInterest)
 
-        console.log(documentIdElements)
+        result = documentIdElements
     } catch (e) {
         await browser.close()
         throw e
     }
+
+    return result
 }
 
 async function debug () {
@@ -114,7 +116,7 @@ async function debug () {
     console.log(res)
 }
   
-  debug()
+//   debug()
   
   module.exports = run
   
