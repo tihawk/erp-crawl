@@ -17,7 +17,7 @@ async function sendEmail (toArr, listOfMessages, townOfInterest) {
             html
         }
 
-        mailgun.messages().send(mailOptions, (err, body) => {
+        await mailgun.messages().send(mailOptions, (err, body) => {
             if (err) {
                 console.log(err)
             } else {
@@ -25,7 +25,6 @@ async function sendEmail (toArr, listOfMessages, townOfInterest) {
             }
         })
     }
-
 }
 
 module.exports = sendEmail
