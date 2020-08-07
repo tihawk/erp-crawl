@@ -28,6 +28,33 @@ const { elementReady, pageLogger, timeout } = require('../utils')
 //     }
 // }
 
+function getDateFromEuString (string) {
+    const strArr = string.split('.')
+    const newStr = strArr.reverse().join('-').concat(' 00:00 GMT')
+    const dateObj = new Date(newStr)
+    return dateObj
+}
+
+function filterMessagesByDate (_messages) {
+    const reDate = /(\d\d\.\d\d\.\d\d\d\d)/gi
+    const result = []
+    const dateToday = new Date()
+    const dateTodayString = `${dateToday.getDate()}.${dateToday.getMonth() + 1}.${dateToday.getFullYear()}`
+
+    for (const m of _messages) {
+        const match = m.dateConcerning.match(reDate)
+
+        // take the last date mentioned in heading, and compare it to today
+        if (getDateFromEuString(match[match.length - 1]) >= getDateFromEuString(dateTodayString)) {
+            result.push(m)
+        } else {
+            console.log('[filterMessagesByDate] message filtered because dates are from the past', match)
+        }
+    }
+
+    return result
+}
+
 async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
     const browser = await puppeteer.launch({
         // headless: false,
@@ -95,7 +122,8 @@ async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1
             return result
         }, townOfInterest)
 
-        result = documentIdElements
+        result = filterMessagesByDate(documentIdElements)
+        // filterMessagesByDate(result)
     } catch (e) {
         await browser.close()
         throw e

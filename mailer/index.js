@@ -4,6 +4,10 @@ const mailgun = new Mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: proces
 
 async function sendEmail (toArr, listOfMessages, townOfInterest) {
     console.log(listOfMessages)
+    if (listOfMessages.length < 1) {
+        console.log('[sendEmail] no messages for upcoming days, not sending emails')
+        return
+    }
 
     const html = listOfMessages.map(message => {
         return `<strong>${message.dateConcerning}</strong><br/><br/>${message.message}`
