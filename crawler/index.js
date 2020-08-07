@@ -28,7 +28,7 @@ async function getFeedItemData (page, documentIdElement, dateConcerning) {
     }
 }
 
-async function run (url, cityNumber = '1') {
+async function run (url, cityNumber = '1', townOfInterest = 'Страшимирово') {
     const browser = await puppeteer.launch({
         defaultViewport: {
             width: 1366,
@@ -52,7 +52,7 @@ async function run (url, cityNumber = '1') {
         await page.goto(url, {waitUntil: 'networkidle0', timeout: 30000}) // prevent timeout error and not scraping feed
         await timeout(1000)
 
-        console.log('[run] selecting city')
+        console.log('[run] Selecting City number', cityNumber)
         await Promise.all([
             page.evaluate(_cityNumber => {
                 document.querySelector(`div[data-item="${_cityNumber}"]`).click()
@@ -60,13 +60,12 @@ async function run (url, cityNumber = '1') {
             // page.waitForNavigation({waitUntil: 'networkidle0', timeout: 30000})
         ])
 
-        console.log('hi')
         await page.waitForSelector('ul#interruption_areas')
         await timeout(2000)
 
-        console.log('[run] Start Crawiling Feed')
+        console.log('[run] Start Crawling Feed')
 
-        let documentIdElements = await page.evaluate(() => {
+        let documentIdElements = await page.evaluate(_townOfInterest => {
             const result = []
             let feedElements = Array.from(document.querySelector('ul#interruption_areas').childNodes)
 
@@ -77,14 +76,24 @@ async function run (url, cityNumber = '1') {
                     continue
                 }
 
-                let dateConcerning = (Array.from(liNode.getElementsByTagName('div')).forEach(span => span.innerText))
-                result.push(dateConcerning)
+                // console.log('[run] getting date and message')
+                let dateConcerning = liNode.getElementsByClassName('period')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
+                let message = liNode.getElementsByClassName('text')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
+
+                if(message.includes(_townOfInterest)) {
+                    console.log(`[run] town of ${_townOfInterest} is mentioned in message`)
+                    // console.log(dateConcerning, message)
+                    result.push({dateConcerning, message})
+                } else {
+                    continue
+                }
+
             }
 
             return result
-        })
+        }, townOfInterest)
 
-        // console.log(documentIdElements)
+        console.log(documentIdElements)
     } catch (e) {
         await browser.close()
         throw e
