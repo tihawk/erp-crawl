@@ -1,3 +1,5 @@
+import log from "./log.js"
+
 /**
  * Promised Timeout variant
  * @param ms Time in Milliseconds to wait
@@ -39,7 +41,7 @@ export async function elementReady (selector, _timeout = 1000000, preTimeout= nu
 export async function idle (ms) {
  return new Promise(res => {
     window.requestIdleCallback(async () => {
-      console.log('window idle')
+      log.debug('window idle')
       await timeout(ms)
       res()
     })
@@ -50,7 +52,7 @@ export function pageLogger (msg) {
   if (msg._location && msg._location.url !== '__puppeteer_evaluation_script__') return
   for (let i = 0; i < msg.args().length; ++i) {
     if (msg.args()[i]._remoteObject) {
-      console.log(`${new Date()} [PageConsole]`, msg.args()[i]._remoteObject.value)
+      log.debug(`${new Date()} [PageConsole]`, msg.args()[i]._remoteObject.value)
     }
   }
 }

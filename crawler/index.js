@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer'
 import { pageLogger, timeout } from '../utils/index.js'
+import log from '../utils/log.js'
 
 /**
   @param {string} string - Date in EU formatted string
@@ -29,7 +30,7 @@ function filterMessagesByDate (_messages) {
         if (getDateFromEuString(match[match.length - 1]) >= getDateFromEuString(dateTodayString)) {
             result.push(m)
         } else {
-            console.log('[filterMessagesByDate] message filtered because dates are from the past', match)
+            log.debug('[filterMessagesByDate] message filtered because dates are from the past', match)
         }
     }
 
@@ -62,7 +63,7 @@ export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', c
         await page.goto(url, {waitUntil: 'networkidle0', timeout: 30000}) // prevent timeout error and not scraping feed
         await timeout(1000)
 
-        console.log('[run] Selecting City number', cityNumber)
+        log.debug('[run] Selecting City number', cityNumber)
         await Promise.all([
             page.evaluate(_cityNumber => {
                 document.querySelector(`div[data-item="${_cityNumber}"]`).click()
@@ -73,7 +74,7 @@ export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', c
         await page.waitForSelector('ul#interruption_areas')
         await timeout(2000)
 
-        console.log('[run] Start Crawling Feed')
+        log.debug('[run] Start Crawling Feed')
 
         const documentIdElements = await page.evaluate(_townOfInterest => {
             const result = []
@@ -81,18 +82,18 @@ export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', c
 
             for (const liNode of feedElements) {
                 if (liNode.tagName === 'LI') {
-                    // console.log('element is valid')
+                    // log.debug('element is valid')
                 } else {
                     continue
                 }
 
-                // console.log('[run] getting date and message')
+                // log.debug('[run] getting date and message')
                 const dateConcerning = liNode.getElementsByClassName('period')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
                 const message = liNode.getElementsByClassName('text')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
 
                 if(message.includes(_townOfInterest)) {
-                    console.log(`[run] town of ${_townOfInterest} is mentioned in message`)
-                    // console.log(dateConcerning, message)
+                    log.debug(`[run] town of ${_townOfInterest} is mentioned in message`)
+                    // log.debug(dateConcerning, message)
                     result.push({dateConcerning, message})
                 } else {
                     continue
@@ -121,8 +122,8 @@ export async function debug() {
     try {
         res.push(await run(url))
     } catch (e) {
-        console.error('caught exeption', e) 
+        log.error('caught exeption', e) 
     }
     
-    console.log(res)
+    log.debug(res)
 }
