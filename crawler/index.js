@@ -82,7 +82,7 @@ export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', c
 
             for (const liNode of feedElements) {
                 if (liNode.tagName === 'LI') {
-                    // log.debug('element is valid')
+                    // console.log('element is valid')
                 } else {
                     continue
                 }
@@ -92,8 +92,8 @@ export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', c
                 const message = liNode.getElementsByClassName('text')[0].innerText.toString().replace(/(\s+)/gi, ' ').trim()
 
                 if(message.includes(_townOfInterest)) {
-                    log.debug(`[run] town of ${_townOfInterest} is mentioned in message`)
-                    // log.debug(dateConcerning, message)
+                    console.log(`[run] town of ${_townOfInterest} is mentioned in message`)
+                    // console.log(dateConcerning, message)
                     result.push({dateConcerning, message})
                 } else {
                     continue
