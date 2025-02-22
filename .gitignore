@@ -1,2 +1,4 @@
 node_modules/
 .env
+cron.log
+package-lock.json

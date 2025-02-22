@@ -1,7 +1,10 @@
-const Mailgun = require('mailgun-js')
+import dotenv from 'dotenv'
+dotenv.config()
+import Mailgun from 'mailgun-js'
+console.log(process.env)
 const mailgun = new Mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.DOMAIN, host: process.env.MAILGUN_HOST})
 
-async function sendEmail (toArr, listOfMessages, townOfInterest) {
+export default async function sendEmail(toArr, listOfMessages, townOfInterest) {
     console.log(listOfMessages)
     if (!listOfMessages.length) {
         console.log('[sendEmail] no messages for upcoming days, not sending emails')
@@ -29,5 +32,3 @@ async function sendEmail (toArr, listOfMessages, townOfInterest) {
         })
     }
 }
-
-module.exports = sendEmail

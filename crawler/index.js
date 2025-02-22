@@ -1,6 +1,10 @@
-const puppeteer = require('puppeteer')
-const { pageLogger, timeout } = require('../utils')
+import puppeteer from 'puppeteer'
+import { pageLogger, timeout } from '../utils/index.js'
 
+/**
+  @param {string} string - Date in EU formatted string
+  @return {Date} A JS date object
+*/
 function getDateFromEuString (string) {
     const strArr = string.split('.')
     const newStr = strArr.reverse().join('-').concat(' 00:00 GMT')
@@ -8,6 +12,10 @@ function getDateFromEuString (string) {
     return dateObj
 }
 
+/**
+  @param {string[]} _messages - A list of messages
+  @returns {string[]} Filtered messages by current date
+*/
 function filterMessagesByDate (_messages) {
     const reDate = /(\d\d\.\d\d\.\d\d\d\d)/gi
     const result = []
@@ -28,7 +36,7 @@ function filterMessagesByDate (_messages) {
     return result
 }
 
-async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
+export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
     const browser = await puppeteer.launch({
         // headless: false,
         args: ['--no-sandbox'],
@@ -105,7 +113,7 @@ async function run (url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1
     return result
 }
 
-async function debug () {
+export async function debug() {
     const url = 'https://erpsever.bg/bg/prekysvanija'
   
     const res = []
@@ -118,8 +126,3 @@ async function debug () {
     
     console.log(res)
 }
-  
-//   debug()
-  
-  module.exports = run
-  
