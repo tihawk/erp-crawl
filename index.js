@@ -1,3 +1,4 @@
+import 'dotenv/config.js'
 import run from './crawler/index.js'
 import sendEmail from './mailer/index.js'
 

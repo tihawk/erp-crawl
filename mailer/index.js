@@ -1,5 +1,5 @@
-import dotenv from 'dotenv'
-dotenv.config()
+//import dotenv from 'dotenv'
+//dotenv.config()
 import Mailgun from 'mailgun-js'
 import log from '../utils/log.js'
 const mailgun = new Mailgun({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.DOMAIN, host: process.env.MAILGUN_HOST})
