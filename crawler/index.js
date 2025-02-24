@@ -49,7 +49,7 @@ function filterMessagesByDate(_messages) {
 			continue;
 		}
 
-		// take the last date mentioned in heading, and compare it to today
+		// Take the last date mentioned in heading, and compare it to today
 		if (
 			getDateFromEuString(match[match.length - 1]) >=
 			getDateFromEuString(dateTodayString)
@@ -70,7 +70,6 @@ function filterMessagesByDate(_messages) {
   @param {Locations} locations
   @returns {Promise<Message[]>}
 */
-// export default async function run(url = 'https://erpsever.bg/bg/prekysvanija', cityNumber = '1', townOfInterest = 'Страшимирово') {
 export default async function run(
 	url = "https://erpsever.bg/bg/prekysvanija",
 	locations = { 1: ["Страшимирово"] },

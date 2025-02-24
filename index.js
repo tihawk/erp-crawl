@@ -1,7 +1,7 @@
 // @ts-check
 import "dotenv/config.js";
 import sqlite3 from "sqlite3";
-import run, { debug } from "./crawler/index.js";
+import run from "./crawler/index.js";
 import sendEmail from "./mailer/index.js";
 import {
 	execute,
@@ -44,25 +44,33 @@ const main = async () => {
 		db.close();
 	}
 
-	run(undefined, requestLocations).then(async (messages) => {
+	await run(undefined, requestLocations).then(async (messages) => {
 		const db = new sqlite3.Database("erp.db");
 
-		await storeMessages(db, messages);
-		await sendUnsetMessages(db);
+		try {
+			await storeMessages(db, messages);
+			await sendUnsentMessages(db);
+		} catch (e) {
+			log.error(e);
+		} finally {
+			log.debug("Closing db connection.");
+			db.close();
+		}
 
-		db.close();
+	});
 
-		new Promise((resolve, _) => {
-			setTimeout(() => {
-				resolve(process.exit());
-			}, 2000);
-		});
+	new Promise((resolve, _) => {
+		setTimeout(() => {
+			resolve(process.exit());
+		}, 2000);
 	});
 };
 
 /**
-  @param {any} db
+  Store crawled messages to DB
+  @param {sqlite3.Database} db
   @param {import('./crawler/index.js').Message[]} messages
+  @returns {Promise<void>}
 */
 const storeMessages = async (db, messages) => {
 	log.debug(
@@ -104,9 +112,11 @@ const storeMessages = async (db, messages) => {
 };
 
 /**
-  @param {any} db
+  Find any unsent messages, and attempt to send them via email
+  @param {sqlite3.Database} db
+  @returns {Promise<void>}
 */
-const sendUnsetMessages = async (db) => {
+const sendUnsentMessages = async (db) => {
 	const messagesToSend = {};
 
 	try {
@@ -126,7 +136,7 @@ const sendUnsetMessages = async (db) => {
 		log.debug(
 			"There are",
 			theJoin.length,
-			"undelivered message.",
+			"undelivered messages.",
 			"Will attempt to deliver them now.",
 		);
 

@@ -23,18 +23,23 @@ export default async function sendEmail(toArr, listOfMessages) {
 		const mailOptions = {
 			from: process.env.FROM,
 			to,
-			subject: `Планирано спиране на тока за ${[...new Set(
-				listOfMessages.map((el) => el.name),
-			)].join(", ")}`,
+			subject: `Планирано спиране на тока за ${[
+				...new Set(listOfMessages.map((el) => el.name)),
+			].join(", ")}`,
 			html,
 		};
 
-		await mailgun.messages().send(mailOptions, (err, body) => {
-			if (err) {
-				log.error("[sendEmail]", err);
-			} else {
-				log.debug("Email sent:", body);
-			}
+		await new Promise((resolve, reject) => {
+			mailgun.messages().send(mailOptions, (err, body) => {
+				if (err) {
+					log.error("[sendEmail]", err);
+					reject();
+					throw new Error(err);
+				} else {
+					log.debug("Email sent:", body);
+					resolve();
+				}
+			});
 		});
 	}
 }
