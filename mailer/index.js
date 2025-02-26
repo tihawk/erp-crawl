@@ -1,11 +1,19 @@
+// @ts-check
 import Mailgun from "mailgun-js";
 import log from "../utils/log.js";
 const mailgun = new Mailgun({
+  // @ts-ignore
 	apiKey: process.env.MAILGUN_API_KEY,
+  // @ts-ignore
 	domain: process.env.DOMAIN,
 	host: process.env.MAILGUN_HOST,
 });
 
+/**
+  @param {string[]} toArr - Recipient list
+  @param {import("../index.js").MessageJoin[]} listOfMessages - List of messages
+  @returns {Promise<void>}
+*/
 export default async function sendEmail(toArr, listOfMessages) {
 	log.debug("[sendEmail] messages to send:", listOfMessages);
 	if (!listOfMessages.length) {
@@ -34,10 +42,10 @@ export default async function sendEmail(toArr, listOfMessages) {
 				if (err) {
 					log.error("[sendEmail]", err);
 					reject();
-					throw new Error(err);
+					throw new Error([err.statusCode, err.message].join('\n'));
 				} else {
 					log.debug("Email sent:", body);
-					resolve();
+					resolve('Email sent');
 				}
 			});
 		});

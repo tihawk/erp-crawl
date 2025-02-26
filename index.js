@@ -18,6 +18,20 @@ import {
 	insertRecipientMessageSql,
 } from "./sqlite/sql.js";
 
+/**
+  @typedef {Object} MessageJoin
+  @property {number} id
+  @property {string} email - Recipient email
+  @property {string} name - Name of location (townOfInterest)
+  @property {number} recipient_id
+  @property {number} message_id
+  @property {number} location_id
+  @property {number} isSent - int-encoded boolean whether the message has been succesfully sent via email
+  @property {string} hash - A hash value for the dateConcerning and message fields
+  @property {string} dateConcerning
+  @property {string} message
+*/
+
 /**@type {import('./crawler/index.js').Locations}*/
 let requestLocations = {};
 
@@ -120,6 +134,7 @@ const sendUnsentMessages = async (db) => {
 	const messagesToSend = {};
 
 	try {
+    /**@type {MessageJoin[]}*/
 		const theJoin = await fetchAll(
 			db,
 			`SELECT * FROM recipient
